@@ -10,11 +10,11 @@ if not pg.image.get_extended():
     raise SystemExit("Sorry, extended image module required")
 
 
-MAX_SHOTS = 2
+MAX_SHOTS = 4
 ALIEN_ODDS = 22
 BOMB_ODDS = 60
 ALIEN_RELOAD = 24
-SCREENRECT = pg.Rect(0, 0, 640, 480)
+SCREENRECT = pg.Rect(0, 0, 2*640, 2*480)
 SCORE = 0
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
@@ -139,7 +139,7 @@ class Bomb(pg.sprite.Sprite):
 
     def update(self):
         self.rect.move_ip(0, self.speed)
-        if self.rect.bottom >= 470:
+        if self.rect.bottom >= SCREENRECT.bottom - 10:
             Explosion(self, self.explosion_group)
             self.kill()
 
@@ -152,7 +152,7 @@ class Score(pg.sprite.Sprite):
         self.color = "white"
         self.lastscore = -1
         self.update()
-        self.rect = self.image.get_rect().move(10, 450)
+        self.rect = self.image.get_rect().move(10, SCREENRECT.bottom - 30)
 
     def update(self):
         if SCORE != self.lastscore:
@@ -190,6 +190,7 @@ def main(winstyle=0):
 
     bgdtile = load_image("background.gif")
     background = pg.Surface(SCREENRECT.size)
+    print(f"background is {background}")
     for x in range(0, SCREENRECT.width, bgdtile.get_width()):
         background.blit(bgdtile, (x, 0))
     screen.blit(background, (0, 0))
